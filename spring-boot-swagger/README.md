@@ -10,3 +10,5 @@ Read a full description of this example project at: [http://www.rpi-cloud.com/gu
 
 http://localhost:9090/v2/api-docs
 http://localhost:9090/swagger-ui.htm
+
+Status: working
