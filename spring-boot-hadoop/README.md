@@ -38,6 +38,9 @@ hdfs-site.xml
 </configuration>
 ```
 
+Other sittings are under cp-hadoop-conf directory
+
+
 # Enable Remote Login:
 "System Preferences" -> "Sharing" -> Check "Remote Login"
 verify: ssh localhost
@@ -73,6 +76,7 @@ hdfs dfs -ls /foo <br/>
 http://localhost:50070/explorer.html#/foo <br/>
 
 
-
+# Writing a file to HDFS
+hadoop fs -copyFromLocal
 
 
