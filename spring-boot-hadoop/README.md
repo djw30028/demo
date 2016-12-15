@@ -14,9 +14,10 @@ Installation
 ```
 
 # Hadoop setup in .bash_profile [install with brew]
-export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3
-alias hstart="/usr/local/Cellar/hadoop/2.7.3/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/2.7.3/sbin/start-yarn.sh"
-alias hstop="/usr/local/Cellar/hadoop/2.7.3/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/2.7.3/sbin/stop-dfs.sh"
+export HADOOP_HOME=/usr/local/Cellar/hadoop/2.7.3<br>
+alias hstart="/usr/local/Cellar/hadoop/2.7.3/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/2.7.3/sbin/start-yarn.sh"<br/>
+alias hstop="/usr/local/Cellar/hadoop/2.7.3/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/2.7.3/sbin/stop-dfs.sh"</br>
+
 export PATH=$PATH:$HADOOP_HOME/bin
 
 # setup hadoop hdfs node (directory), $HADOOP_HOME/libexec/etc/hadoop
@@ -41,7 +42,7 @@ hdfs-site.xml
 Other sittings are under cp-hadoop-conf directory
 
 
-# Enable Remote Login:
+# Enable Remote Login for Macbook:
 "System Preferences" -> "Sharing" -> Check "Remote Login"
 verify: ssh localhost
 
