@@ -79,4 +79,7 @@ http://localhost:50070/explorer.html#/foo <br/>
 # Writing a file to HDFS
 hadoop fs -copyFromLocal
 
-
+# Java client to view HDFS and copy local file to HDFS
+ReadFileFromHDFS <br>
+CopyLocalFileToHDFS <br/>
+CopyHDFStoLocal
