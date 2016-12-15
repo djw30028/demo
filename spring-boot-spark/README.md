@@ -32,6 +32,8 @@ URL: spark://michaels-mbp-3.corp.clearleap.com:7077
 # Submit Application
 spark-submit --class "com.michaelw.spark.JavaWordCount" --master spark://michaels-mbp-3.corp.clearleap.com:7077 /Users/michaelwang/project/mytechzone/demo/spring-boot-spark/target/spring-boot-spark-0.0.1-SNAPSHOT.jar
 
+spark-submit --class "com.michaelw.spark.JavaWordCount" --master spark://michaels-mbp-3.corp.clearleap.com:7077 /Users/michaelwang/project/mytechzone/demo/spring-boot-spark/target/spring-boot-spark-0.0.1-SNAPSHOT.jar /Users/michaelwang/project/mytechzone/demo/spring-boot-spark/README.md
+
 # Check spark console http://localhost:8080/ to see the application submitted
 
 # Note:

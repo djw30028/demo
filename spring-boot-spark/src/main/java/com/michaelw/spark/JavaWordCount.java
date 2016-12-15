@@ -62,7 +62,12 @@ public class JavaWordCount implements Serializable {
         spark.stop();
     }
     public static void main(String[] args) {
+
         String path = "/Users/michaelwang/project/mytechzone/demo/spring-boot-spark/README.md";
+
+        if (args.length>0) {
+            path = args[0];
+        }
         try {
             new JavaWordCount().wordCount(path);
         }
