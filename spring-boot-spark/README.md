@@ -30,9 +30,15 @@ URL: spark://michaels-mbp-3.corp.clearleap.com:7077
 
 
 # Submit Application
+-- default file
 spark-submit --class "com.michaelw.spark.JavaWordCount" --master spark://michaels-mbp-3.corp.clearleap.com:7077 /Users/michaelwang/project/mytechzone/demo/spring-boot-spark/target/spring-boot-spark-0.0.1-SNAPSHOT.jar
 
+-- local file:
 spark-submit --class "com.michaelw.spark.JavaWordCount" --master spark://michaels-mbp-3.corp.clearleap.com:7077 /Users/michaelwang/project/mytechzone/demo/spring-boot-spark/target/spring-boot-spark-0.0.1-SNAPSHOT.jar /Users/michaelwang/project/mytechzone/demo/spring-boot-spark/README.md
+
+-- hadoop: http://localhost:50070/explorer.html#/foo
+spark-submit --class "com.michaelw.spark.JavaWordCount" --master spark://michaels-mbp-3.corp.clearleap.com:7077 /Users/michaelwang/project/mytechzone/demo/spring-boot-spark/target/spring-boot-spark-0.0.1-SNAPSHOT.jar hdfs://localhost:9000/foo/hadoop_install.txt
+
 
 # Check spark console http://localhost:8080/ to see the application submitted
 
