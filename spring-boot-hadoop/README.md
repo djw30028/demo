@@ -44,7 +44,11 @@ Other sittings are under cp-hadoop-conf directory
 
 # Enable Remote Login for Macbook:
 "System Preferences" -> "Sharing" -> Check "Remote Login"
-verify: ssh localhost
+
+verify: ssh localhost <br>
+seeing something like this:
+Last login: Wed Dec 14 16:00:32 2016 from ::1
+
 
 # Start/Stop
 Start: hstart <br/>
