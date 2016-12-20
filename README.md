@@ -4,3 +4,6 @@
 # spring-boot-spark
 # spring-boot-swagger-docker
 # spring-boot-integration/file-read-directory
+# spring-boot-integration/installation
+   rabbitMQ, Redis
+# spring-cloud-stream-source-rabbitmq
