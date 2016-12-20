@@ -3,6 +3,7 @@ redis-server
 
 ## Start RabbitMQ
 rabbitmq-server
+sh rabbitmqctl stop
 
 ## Monitor : guest/guest
 http://localhost:15672/
@@ -11,7 +12,7 @@ http://localhost:15672/
 mav clean package
 
 ##  Run
-java -jar target/spring-cloud-stream-source-0.0.1-SNAPSHOT.jar
+java -jar target/spring-cloud-stream-source-rabbitmq-0.0.1-SNAPSHOT.jar
 
 
 ## Observation
