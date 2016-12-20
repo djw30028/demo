@@ -7,7 +7,7 @@ mvn spring-boot:run
 ```
 
 
-http://localhost:9090/v2/api-docs
+http://localhost:9090/v2/api-docs?group=business-api <br>
 http://localhost:9090/swagger-ui.html
 
 Status: working
