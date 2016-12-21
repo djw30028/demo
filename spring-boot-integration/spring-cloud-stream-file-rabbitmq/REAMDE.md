@@ -1,3 +1,5 @@
+# TO BE DELETE, refer stream-starter-source-file
+
 ##  Build
 mav clean package
 
@@ -18,3 +20,5 @@ need to find the reason
     <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
     <version>1.0.3.RELEASE</version>
  </dependency>
+
+http://start-scs.cfapps.io/
