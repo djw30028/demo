@@ -1,5 +1,6 @@
 ## Document
 http://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/
+https://blog.pivotal.io/big-data-pivotal/products/data-goes-cloud-native-with-the-new-spring-cloud-data-flow
 
 ## Generate project
 http://start-scs.cfapps.io/

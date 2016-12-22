@@ -1,4 +1,4 @@
-package com.michaelw;
+package com.michaelw.source;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
