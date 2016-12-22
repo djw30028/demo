@@ -31,10 +31,17 @@ drop file to /usr/local/demo/input
 ## Observation
 --- [ask-scheduler-2] o.s.i.file.FileReadingMessageSource      : Created message: [GenericMessage [payload=/Users/michaelwang/project/input/pom.txt, headers={id=297fb1d8-2cdd-e38d-f755-ba97b3b7a2cd, timestamp=1482290151857}]]
 
-## TODO:
-need to find the reason
- <dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
- </dependency>
-
+## Functionality
+<pre>
+1. Spring Integrate function
+  1.1 File is polling under /usr/local/demo/input
+  1.2 transform ->
+  1.3 handler
+  1.4 forward to MQ: processor
+2. Processor
+  2.1 get payload from MQ
+  2.2 convert to IngestData
+  2.3 forward to MQ: sink
+3. Sink
+  3.1 get payload from MQ
+</pre>

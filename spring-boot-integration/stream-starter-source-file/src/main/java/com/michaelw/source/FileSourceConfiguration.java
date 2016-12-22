@@ -51,8 +51,8 @@ public class FileSourceConfiguration {
         return new FileToStringTransformer();
     }
 
-    @Bean
-    public FileHandler fileHandler() {
+    @Bean (name = "fileHandler")
+    public FileHandler fileHandlerEntry() {
         logger.info(" -- fileHandler ");
         return new FileHandler();
     }
