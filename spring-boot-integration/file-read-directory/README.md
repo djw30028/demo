@@ -1,3 +1,6 @@
+# DOCUMENT
+https://github.com/xpadro/spring-integration/tree/master/file/file-read-directory
+
 # FILE
 Spring Integration File support
 
@@ -22,3 +25,10 @@ see you
 * process vedio file, currently only process txt file
 * after process, remove the file to archive
 
+## code kept
+```
+protected final String transformFile(File file) throws Exception {
+		Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), this.charset));
+		return FileCopyUtils.copyToString(reader);
+	}
+```

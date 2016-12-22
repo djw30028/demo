@@ -10,5 +10,11 @@ brew install redis
   brew services start redis
 
 # Start service you can just run:
-  redis-server /usr/local/etc/redis.conf
- or redis-server
+  * redis-server /usr/local/etc/redis.conf
+  * redis-server
+
+# Stop redis
+  ps aux |grep redis-server
+  then kill it
+
+  
