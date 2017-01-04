@@ -2,9 +2,10 @@
 ## 1. Tag mysql image
 1.1 find images ID for mysql   
   $ docker images mysql   
+  
 | REPOSITORY   |    TAG     |           IMAGE ID      |   
 | ------------- |:-------------:| -----:|    
-|mysql          |     5.6            |     e1406e1f7c42  |e1406e1f7c42    
+|mysql          |     5.6            |     e1406e1f7c42  |e1406e1f7c42    |
 
 1.2 Use above images id to tag 
    $ docker tag e1406e1f7c42 registry.ng.bluemix.net/myclearflowns/mysql
@@ -24,7 +25,7 @@
 ## 3. Push to bluemix
 3.1 pre check
   ``$ cf ic ps``   
-3.2 push to bluemix and run
+3.2 push to bluemix and run   
   ``$ cf ic run --name mysql-blue -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=demo -e MYSQL_USER=demo_user -e MYSQL_PASSWORD=demo_pass -d registry.ng.bluemix.net/myclearflowns/mysql`` 
 
 For free account, get following error:   
@@ -38,8 +39,8 @@ Login to bluemix.com and create new container and select myclearflows/mysql:last
   ``$ mvn clean package docker:build``   
   
 ## 2. Tag Push to register
-  ``
-  $ docker tag blue/spring-boot-docker-mysql registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql
+  ``  
+  $ docker tag blue/spring-boot-docker-mysql registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql   
   $ docker push registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql 
   ``
   
@@ -79,6 +80,8 @@ $ cf ic ps -a
 
 
 4.7 Other console commands: https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#container_troubleshoot
- - view log: $ cf ic logs CONTAINER
-
+ - view log: $ cf ic logs CONTAINER   
+ - start container: cf ic start CONTAINER
+ - Log into your running container: 
+    
  
