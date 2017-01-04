@@ -67,5 +67,3 @@ $ docker rmi [--force] [above image id]
 ```
 
 
-Reference:    
-https://github.com/jiwhiz/spring-boot-docker-mysql/wiki
