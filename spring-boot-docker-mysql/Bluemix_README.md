@@ -78,6 +78,7 @@ $ docker push registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql
 $ cf ic run --name blue-app-mysql --link mysql-blue:mysql -p 8080 -m 256 registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql 
 $ cf ic ps -a 
 
+***
 
 4.7 Other console commands:    
 ```
@@ -95,10 +96,15 @@ https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#conta
     
  - view log: $ cf ic logs CONTAINER   
  - start container: cf ic start CONTAINER
+
+---
+
  - inspect:   
      $ cf ic inspect CONTAINER    
-     $ cf ic group inspect GROUP
+     $ cf ic group inspect GROUP   
      
+---     
+
  - Log into the running container:   
    1 Find images   
      $ cf ic images   
