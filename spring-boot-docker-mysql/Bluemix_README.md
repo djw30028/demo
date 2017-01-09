@@ -109,18 +109,17 @@ https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#conta
    4 Log into your running container.    
     $ cf ic exec -it CONTAINER bash   
   
-  
-  
-  - Login to mysql 
-    $ cf ic ps 
-    $ cf ic exec -it df95d89d-063 bash   
+---
+  - Login to mysql    
+    $ cf ic ps  
+    $ cf ic exec -it df95d89d-063 bash     
     root@instance-00135c2a: mysql -h localhost -u demo_user -p   
     mysql> show databases;   
     mysql> use demo   
     mysql> show tables;   
     mysql> select * from employee;
    
-   
+---  
     
   - log file  
      1 tail log file   
