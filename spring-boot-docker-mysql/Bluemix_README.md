@@ -132,4 +132,15 @@ https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#conta
        $ cf ic logs <container-name>   
      2 recent    
        $ cf ic logs <container-name> -recent   
+ 
+---
+  - Copy file from local/remote container   
+    1 find container name
+      $ cf ic ps   
+      got result:  
+       35e0449b-b22        registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql:latest   ""                  4 days ago          Running 4 days ago   169.46.21.231:8080->8080/tcp   blue-app-mysql    
+      
     
+    2 Copy to name of  blue-app-mysql    
+    $ cf ic cp ./my_cp.txt blue-app-mysql:/usr/local/clearleap
+      
