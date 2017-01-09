@@ -99,7 +99,7 @@ https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#conta
      $ cf ic inspect CONTAINER    
      $ cf ic group inspect GROUP
      
- - Log into the running container:
+ - Log into the running container:   
    1 Find images   
      $ cf ic images   
    2 Start container if not: 
@@ -119,10 +119,12 @@ https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#conta
     mysql> use demo   
     mysql> show tables;   
     mysql> select * from employee;
+   
+   
     
   - log file  
-     1 tail log file
-       $ cf ic logs <container-name>
-     2 recent 
-       $ cf ic logs <container-name> -recent
+     1 tail log file   
+       $ cf ic logs <container-name>   
+     2 recent    
+       $ cf ic logs <container-name> -recent   
     
