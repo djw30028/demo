@@ -65,5 +65,15 @@ $ docker rm [above id]
 $ docker images | grep michael/spring-boot-docker-mysql   
 $ docker rmi [--force] [above image id]
 ```
+ 
+* List all containers: $ docker ps
+* Stop all container:
+ $ docker stop $(docker ps -a -q)
+* Delete all container:
+ $ docker rm $(docker ps -a -q)
 
+* List all images:
+  $ docker images [-a]
+* Delete all images: $ docker rmi $(docker images -q)
+ 
 

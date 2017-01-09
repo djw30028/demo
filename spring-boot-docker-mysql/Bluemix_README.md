@@ -79,9 +79,48 @@ $ cf ic run --name blue-app-mysql --link mysql-blue:mysql -p 8080 -m 256 registr
 $ cf ic ps -a 
 
 
-4.7 Other console commands: https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#container_troubleshoot
+4.7 Other console commands:    
+```
+https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#container_troubleshoot
+```
+ - login   
+   *$ cf login*   
+   *$ cf ic login*  
+    
+   
+ - List your containers and review the current status.List your containers and review the current status.
+   -- Single container  $ cf ic ps -a     
+   -- Container group:  $ cf ic group list
+    
+    
  - view log: $ cf ic logs CONTAINER   
  - start container: cf ic start CONTAINER
- - Log into your running container: 
+ - inspect:   
+     $ cf ic inspect CONTAINER    
+     $ cf ic group inspect GROUP
+     
+ - Log into the running container:
+   1 Find images   
+     $ cf ic images   
+   2 Start container if not: 
+    $ cf ic start CONTAINER
+   3 Find container ID   
+    $ cf ic ps   
+   4 Log into your running container.    
+    $ cf ic exec -it CONTAINER bash   
+  
+  - Login to mysql 
+    $ cf ic ps 
+    $ cf ic exec -it df95d89d-063 bash   
+    root@instance-00135c2a: mysql -h localhost -u demo_user -p   
+    mysql> show databases;   
+    mysql> use demo   
+    mysql> show tables;   
+    mysql> select * from employee;
     
- 
+  - log file  
+     1 tail log file
+       $ cf ic logs <container-name>
+     2 recent 
+       $ cf ic logs <container-name> -recent
+    
