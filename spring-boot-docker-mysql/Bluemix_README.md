@@ -103,11 +103,13 @@ https://console.ng.bluemix.net/docs/containers/container_troubleshoot.html#conta
    1 Find images   
      $ cf ic images   
    2 Start container if not: 
-    $ cf ic start CONTAINER
+    $ cf ic start CONTAINER   
    3 Find container ID   
     $ cf ic ps   
    4 Log into your running container.    
     $ cf ic exec -it CONTAINER bash   
+  
+  
   
   - Login to mysql 
     $ cf ic ps 
