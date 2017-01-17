@@ -1,0 +1,15 @@
+mysql-red:
+  image: mysql:latest
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=demo
+    - MYSQL_USER=demo_user
+    - MYSQL_PASSWORD=demo_pass
+
+spring-boot-docker-mysql:
+  image: blue/spring-boot-docker-mysql
+  links:
+    - mysql-red:mysql
+  ports:
+    - 8080:8080
+    

@@ -1,0 +1,15 @@
+mysql-blue:
+  image: registry.ng.bluemix.net/myclearflowns/mysql:latest
+  environment:
+    - MYSQL_ROOT_PASSWORD=root
+    - MYSQL_DATABASE=demo
+    - MYSQL_USER=demo_user
+    - MYSQL_PASSWORD=demo_pass
+
+spring-boot-docker-mysql:
+  image: registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql
+  links:
+    - mysql-blue:mysql
+  ports:
+    - 8080:8080
+    
