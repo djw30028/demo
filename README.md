@@ -13,5 +13,6 @@
 ### spring-boot-integration/spring-cloud-stream-source-rabbitmq
 ### spring-boot-integration/stream-starter-source-file
 
+
 ###
 ### spring-boot-docker-mysql for local docker as well as bluemix container
