@@ -1,0 +1,4 @@
+spring-boot-file-monitor:
+  image: blue/file-read-directory
+   
+    
