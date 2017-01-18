@@ -49,5 +49,19 @@ see you
 
 DONE
 
+---
+## Approach 2: Volume
+$ docker volume ls
+$ mvn clean package docker:build
+$ docker tag blue/file-read-directory registry.ng.bluemix.net/myclearflowns/file-read-directory
+$ docker push registry.ng.bluemix.net/myclearflowns/file-read-directory
+$ cf ic run -d --name file-read-directory-11  --volume ftp_data_root:/Users/michaelwang/project/integration registry.ng.bluemix.net/myclearflowns/file-read-directory
+$ cf ic inspect file-read-directory-11
+$ cf ic exec -it file-read-directory-11 bash
+$ cf ic logs file-read-directory-11
+$ cf ic cp file1.txt instance-001d970d:/Users/michaelwang/project/integration
+                                        
+Not working as expect
+
 
 
