@@ -1,7 +1,7 @@
 
-# Part I: Pull and Run RabbitMQ
+# PART I: Pull and Run RabbitMQ
 In hub.docker.com, search for rabbitMQ, pick the official one
-### simple
+### DO NOT USE THIS simple
 $ docker run -d --hostname my-rabbit --name some-rabbit rabbitmq:3
 
 ### DO NOT USE THIS with manager: http://localhost:15672 --> localhost is not working
@@ -17,7 +17,7 @@ $ docker inspect some-rabbit
 $ docker logs some-rabbit   
 $ docker exec -it some-rabbit bash   
 
-# Part II: build/deploy file event project
+# PART II: build/deploy file event project
 ## Build docker images
 $ mvn clean package docker:build
 
@@ -37,6 +37,8 @@ $ docker run -p 8080:8080 --name event-file-mq --link rabbitmq:rabbitmq -d event
 
 ## Check logs
 $ docker logs event-file-mq
+
+# PART III: Test
 
 ## Testing
 $ docker exec -it event-file-mq bash
