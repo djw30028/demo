@@ -3,6 +3,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>com.michaelw</groupId>
+  <artifactId>stream-starter-source-file</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>stream-starter-source-file</name>
+  <description>Demo project for Spring Boot</description>
+  
   <parent>
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
@@ -10,47 +16,14 @@
     <relativePath></relativePath>
   </parent>
 
-  <groupId>com.michaelw</groupId>
-  <artifactId>stream-starter-source-file</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>stream-starter-source-file</name>
-  <description>Demo project for Spring Boot</description>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>0.14.2</version>
-        <configuration>
-          <images>
-            <image>
-              <name>${docker.image}</name>
-              <build>
-                <from>anapsix/alpine-java:8</from>
-                <volumes>
-                  <volume>/tmp</volume>
-                </volumes>
-                <entryPoint>
-                  <exec>
-                    <arg>java</arg>
-                    <arg>-jar</arg>
-                    <arg>/maven/demo.jar</arg>
-                  </exec>
-                </entryPoint>
-                <assembly>
-                  <descriptor>assembly.xml</descriptor>
-                </assembly>
-              </build>
-            </image>
-          </images>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <properties>
+    <docker.image>${project.artifactId}-app</docker.image>
+    <java.version>1.8</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <docker.image.prefix>event</docker.image.prefix>
+  </properties>
+  
+ 
   <repositories>
     <repository>
       <snapshots />
@@ -67,6 +40,7 @@
       <url>https://repo.spring.io/milestone</url>
     </repository>
   </repositories>
+  
   <dependencies>
     <dependency>
       <groupId>org.springframework.cloud.stream.app</groupId>
@@ -105,9 +79,60 @@
     </dependencies>
   </dependencyManagement>
 
-  <properties>
-    <docker.image>${project.artifactId}-app</docker.image>
-    <java.version>1.8</java.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+ <build>
+    <finalName>fileeventprocess</finalName>
+	<plugins>
+		<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+		</plugin>
+		<plugin>
+			<groupId>com.spotify</groupId>
+			<artifactId>docker-maven-plugin</artifactId>
+			<version>0.4.11</version>
+			<configuration>
+				<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+				<dockerDirectory>src/main/docker</dockerDirectory>
+				<resources>
+					<resource>
+						<targetPath>/</targetPath>
+						<directory>${project.build.directory}</directory>
+						<include>${project.build.finalName}.jar</include>
+					</resource>
+				</resources>
+			</configuration>
+		</plugin>
+      <!--  
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.14.2</version>
+        <configuration>
+          <images>
+            <image>
+              <name>${docker.image}</name>
+              <build>
+                <from>anapsix/alpine-java:8</from>
+                <volumes>
+                  <volume>/tmp</volume>
+                </volumes>
+                <entryPoint>
+                  <exec>
+                    <arg>java</arg>
+                    <arg>-jar</arg>
+                    <arg>/maven/demo.jar</arg>
+                  </exec>
+                </entryPoint>
+                <assembly>
+                  <descriptor>assembly.xml</descriptor>
+                </assembly>
+              </build>
+            </image>
+          </images>
+        </configuration>
+      </plugin>
+      -->
+    </plugins>
+  </build>
+
 </project>

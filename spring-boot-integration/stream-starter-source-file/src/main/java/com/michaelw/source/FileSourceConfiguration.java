@@ -40,7 +40,7 @@ public class FileSourceConfiguration {
                 .transform(fileToStringTransformer())
                 //.handle("fileHandler", "handleFile").get();
                 .handle("fileHandler", "handle")
-                .channel(ApplicationConfiguration.INBOUND_CHANNEL)
+                .channel(ApplicationConfiguration.INBOUND_CHANNEL) //forward to MQ with INBOUND_CHANNEL
                 .get();
     }
 
