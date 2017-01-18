@@ -14,8 +14,9 @@ brew services start rabbitmq
 # Start server
 rabbitmq-server
 
-# Check status:
-sh rabbitmqctl status
+# Check status
+$ cd /usr/local/Cellar/rabbitmq/3.6.4/sbin
+$ sh rabbitmqctl status
 
 # Enable rabbitmq-plugins:
 sh rabbitmq-plugins enable rabbitmq_management
