@@ -2,7 +2,7 @@
 Demo Spring Boot application running inside docker container linked with MySQL container.
  
 # Section one: pull mysql to container
-## Run MySQL 5.6 in Docker container:
+## Run MySQL 5.6 in Docker container if not available, pull mysql:5.6:
 
 ```
 docker run --name mysql-blue -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=demo -e MYSQL_USER=demo_user -e MYSQL_PASSWORD=demo_pass -d mysql:5.6   
@@ -30,7 +30,7 @@ Version: '5.6.35'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Comm
 
 
 # Section two: build docker 
-#Build docker image   
+# Build docker image   
 ```
 mvn clean package docker:build
 ```
