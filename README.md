@@ -11,7 +11,8 @@
 ###
 ### spring-boot-integration/spring-cloud-stream-sink-rabbitmq
 ### spring-boot-integration/spring-cloud-stream-source-rabbitmq
-### spring-boot-integration/stream-starter-source-file
+### spring-boot-integration/stream-starter-source-file    
+where 
 
 
 ###

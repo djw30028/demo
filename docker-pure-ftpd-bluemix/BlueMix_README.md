@@ -82,5 +82,41 @@ root@instance-001e30e1:/# pure-pw useradd michael -f /etc/pure-ftpd/passwd/puref
 $ ftp 169.46.19.245 21
 Not working: same issue: 553 Can't open that file: Permission denied
 
+-------------------------------------
+inside container:
+$ cf ic exec -it stilliard-pure-ftpd-w-volume bash
+2.1 Create "michael" group and user    
+groupadd --gid 1010 michael
+useradd --uid 1010 --gid 1010 -m --shell /bin/bash michael
+
+2.2 Add the user to group "root"
+adduser michael root
+chmod 775 /home/ftpusers/michael
+
+2.3 Create pgsql directory under bind-mount volume
+su -c "mkdir -p /home/ftpusers/share" michael
+ln -sf /home/ftpusers/share /home/ftpusers/michael
 
 http://container-solutions.com/understanding-volumes-docker/
+http://stackoverflow.com/questions/31290202/can-i-change-owner-of-directory-that-is-mounted-on-volume-in-ibm-containers
+1. Mount the Volume to `/mnt/pgdata` inside the container
+
+cf ic run --volume pgdata:/mnt/pgdata -p 22 registry.ng.bluemix.net/ruimo/pgsql944-cli
+
+2. Inside the container
+
+2.1 Create "postgres" group and user    
+groupadd --gid 1010 postgres
+useradd --uid 1010 --gid 1010 -m --shell /bin/bash postgres
+
+2.2 Add the user to group "root"
+adduser postgres root
+chmod 775 /mnt/pgdata
+
+2.3 Create pgsql directory under bind-mount volume
+su -c "mkdir -p /mnt/pgdata/pgsql" postgres
+ln -sf /mnt/pgdata/pgsql /var/pgsql
+
+2.2 Remove the user from group "root"
+deluser postgres root
+chmod 755 /mnt/pgdata

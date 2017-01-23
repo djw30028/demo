@@ -24,5 +24,6 @@ sh rabbitmq-plugins enable rabbitmq_management
 # Monitor : guest/guest
 http://localhost:15672/
 
-# Stop server
-sh rabbitmqctl stop
+# Stop server:
+$ cd /usr/local/Cellar/rabbitmq/3.6.4/sbin
+$ sh rabbitmqctl stop
