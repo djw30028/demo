@@ -1,0 +1,332 @@
+package com.manehim.sonar.service;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.manehim.sonar.model.Events;
+import com.manehim.sonar.model.Synthetic;
+import com.manehim.sonar.model.Monitor;
+import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+Zddx
+
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import static com.manehim.sonar.service.ManagedService.*;
+
+/**
+ * Newrelic REST client
+ *
+ * Created by MWANG1 on 7/8/2016.
+ */
+public final class NewrelicClientAccessor {
+    private final static String X_Api_Key = "X-Api-Key";
+    private final static String X_Query_Key = "X-Query-Key";
+    private final static String Q_Query_Value = "OhiS1eSKDbsYlSfDS3X5AJKHGNv0PvWV";
+
+    private volatile static NewrelicClientAccessor instance = null;
+
+
+
+    public Synthetic retrieveManagedService(String serviceId) throws Throwable {
+        String restUrl = "/synthetics/api/v1/monitors/%s";
+        restUrl = NEW_RELIC_HOST + String.format(restUrl, serviceId);
+        System.out.println(" json restUrl: " + restUrl);
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(restUrl);
+        request.addHeader(new BasicHeader(X_Api_Key, NEW_RELIC_KEY));
+        HttpResponse response = client.execute(request);
+        String json = EntityUtils.toString(response.getEntity());
+        System.out.println(" json response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.readValue(json, Synthetic.class);
+    }
+
+    /**
+     * Retrieve Script
+     * @param id
+
+     * @return
+     * @throws Throwable
+     */
+    public String retrieveScript(String id) throws Throwable {
+        String restUrl = "/synthetics/api/v1/monitors/%s/script";
+        restUrl = NEW_RELIC_HOST + String.format(restUrl, id);
+        System.out.println(" json restUrl: " + restUrl);
+
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(restUrl);
+        request.addHeader(new BasicHeader(X_Api_Key, NEW_RELIC_KEY));
+        HttpResponse response = client.execute(request);
+        String json = EntityUtils.toString(response.getEntity());
+        System.out.println(" json response: " + json);
+
+        ObjectMapper mapper = new ObjectMapper();
+        TypeReference<HashMap<String, String>> typeRef
+                = new TypeReference<HashMap<String, String>>(){};
+
+        HashMap<String, String> val = mapper.readValue(json, typeRef);
+
+        String encodeScript = val.get("scriptText");
+        System.out.println("encodeScript" + encodeScript);
+        String script = new String(decode(encodeScript));
+        System.out.println("------ script ---------\n" + script);
+        return script;
+    }
+
+    /**
+     * Update Script
+     * @param updatedScript
+     * @param id
+
+     * @throws Throwable
+     */
+    public void updateScript(final String updatedScript, String id) throws Throwable {
+        String restUrl = "/synthetics/api/v1/monitors/%s/script";
+        restUrl = NEW_RELIC_HOST + String.format(restUrl, id);
+
+        String scriptFormat = "{\"scriptText\": \"%s\"}";
+        System.out.println(" before encode updatedScript: " + updatedScript);
+        String encodeScript = encode(updatedScript);
+        String body = String.format(scriptFormat, encodeScript);
+
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpPut request = new HttpPut(restUrl);
+        request.addHeader(new BasicHeader(X_Api_Key, NEW_RELIC_KEY));
+        request.addHeader("Content-Type", "application/json");
+
+        request.setEntity(new StringEntity(body, "UTF-8"));
+        HttpResponse response = client.execute(request);
+
+        //status=415 HTTP/1.1 415 Unsupported Media Type
+        System.out.println("status=" + response.getStatusLine().getStatusCode());
+
+    }
+
+    //update monitor
+    public void updateStatus(Monitor monitor, boolean enable) throws Throwable {
+        String restUrl = "/synthetics/api/v1/monitors";
+        restUrl = NEW_RELIC_HOST + restUrl;
+
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        ObjectMapper mapper = new ObjectMapper();
+
+        Synthetic synthetic = monitor.getSynthetic();
+        synthetic.setStatus(muteOrUnmute(enable));
+        String json = mapper.writeValueAsString(synthetic);
+
+        StringEntity stringEntity = new StringEntity(json, ContentType.APPLICATION_JSON);
+        HttpPut request = new HttpPut(restUrl);
+        request.addHeader(new BasicHeader(X_Api_Key, NEW_RELIC_KEY));
+        request.setEntity(stringEntity);
+        HttpResponse response = client.execute(request);
+    }
+
+    /**
+     * Get "X-Query-Key: OhiS1eSKDbsYlSfDS3X5AJKHGNv0PvWV"
+     * SELECT * from SyntheticCheck where monitorId='35c2fa91-111b-4173-85d6-99c1cc0fb4c2'
+     * @param id
+     */
+    public List<Events> insightsResult(String id) throws Throwable {
+        String targetUrl = "https://insights-api.newrelic.com/v1/accounts/11576/query?nrql=";
+
+        String restUrl = "SELECT * from SyntheticCheck where monitorId='";
+        restUrl += id;
+        restUrl += "'";
+
+        restUrl = URLEncoder.encode(restUrl);
+        restUrl = targetUrl + restUrl;
+
+        CloseableHttpClient client = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(restUrl);
+
+        request.addHeader(new BasicHeader(X_Query_Key, Q_Query_Value));
+
+        HttpResponse response = client.execute(request);
+        String json = EntityUtils.toString(response.getEntity());
+        List<Events> events = fromJson(json);
+
+        return events;
+    }
+
+    public static String updateVersion(String wholeScript, String oldVersion, String newUrl) {
+        return wholeScript.replaceAll(oldVersion, newUrl);
+    }
+
+
+    private NewrelicClientAccessor() {}
+
+    public static NewrelicClientAccessor getInstance() {
+        if (instance == null) synchronized (NewrelicClientAccessor.class) {
+            if (instance == null) {
+                instance = new NewrelicClientAccessor();
+            }
+        }
+
+        return instance;
+    }
+
+    private byte[] decode(String encodedStr) {
+        return Base64.decode(encodedStr);
+    }
+
+    private String encode(String rawStr) {
+        return Base64.encode(rawStr.getBytes());
+    }
+
+    private List<Events> fromJson(String json) {
+        List<Events> eventList = new ArrayList<Events>();
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode actualObj = mapper.readTree(json);
+            JsonNode resultObj = actualObj.findPath("results").findPath("events");
+
+            for (int i = 0; i < resultObj.size(); i++) {
+                Events events = new Events();
+                events.setStatus(resultObj.get(i).findValue("result").textValue());
+                events.setMonitorId(resultObj.get(i).findValue("id").textValue());
+                events.setMonitorName(resultObj.get(i).findValue("monitorName").textValue());
+                events.setLocation(resultObj.get(i).findValue("location").textValue());
+                events.setLocationLabel(resultObj.get(i).findValue("locationLabel").textValue());
+                events.setId(resultObj.get(i).findValue("id").textValue());
+
+                long datetime = resultObj.get(i).findValue("timestamp").asLong();
+                Date d = new Date(datetime);
+                events.setDate(d);
+
+                eventList.add(events);
+
+            }
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return eventList;
+
+    }
+}
+
+
+Spring REST template with Basic Auth, Java 8 and Spring 4.0.3
+There is a little bit change of how to use Spring 4.0.3 Rest Template to call REST service with basic authentication.
+
+Here is the standalone Java code. It is easy to convert to Spring xml style.
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+
+/*
+  Required library:
+     org.springframework:spring-web:4.0.3
+     org.apache.httpcomponents:httpclient:4.3.3
+     commons-codec:commons-codec:1.9
+ */
+public class AuthRestService {
+  private String RELATIVE_IDENTITY_URL  = "http://xxxcompute-1.amazonaws.com:8082/service/rest/v1/identity/";
+ 
+  public String authenticateByEmail(final String email, final String password, final String domain)  {
+   RestTemplate restTemplate;
+   Credentials credentials;
+  
+   //1. Set credentials
+   credentials = new UsernamePasswordCredentials("test", "test");
+  
+   CredentialsProvider credsProvider = new BasicCredentialsProvider();
+   credsProvider.setCredentials( AuthScope.ANY, credentials);
+   
+          //2. Bind credentialsProvider to httpClient
+   HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+   httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
+   CloseableHttpClient httpClient = httpClientBuilder.build();
+
+   HttpComponentsClientHttpRequestFactory factory = new  
+                       HttpComponentsClientHttpRequestFactory(httpClient);
+  
+   //3. create restTemplate
+   restTemplate = new RestTemplate();
+   restTemplate.setRequestFactory(factory);
+  
+   //4. restTemplate execute
+   String url = RELATIVE_IDENTITY_URL + "domain/{domain}/email/{email}";
+  
+   Map parametersMap = new HashMap();
+   parametersMap.put("domain", domain);
+   parametersMap.put("email", email);
+  
+   MultiValueMap postParams = new LinkedMultiValueMap();
+   postParams.add("password", password);
+  
+   String xml = restTemplate.postForObject(url, postParams, String.class, parametersMap); 
+  
+   return xml;
+  }
+}
+
+package com.michaelw.service;
+
+//import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+public class BluemixBigInsightService {
+	private final static String X_Api_Key = "X-Api-Key";
+    private final static String X_Query_Key = "X-Query-Key";
+    private final static String Q_Query_Value = "OhiS1eSKDbsYlSfDS3X5AJKHGNv0PvWV";
+    
+    private final static String HOST = "https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:8443";
+   
+	public Synthetic getDirectory() throws Throwable {
+		
+		String restUrl = "/gateway/default/webhdfs/v1/?op=LISTSTATUS";
+        restUrl = HOST + String.format(restUrl);
+        System.out.println(" json restUrl: " + restUrl);
+       
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        Credentials credentials = new UsernamePasswordCredentials("michaelw", "Bluemix123456789");
+        provider.setCredentials(AuthScope.ANY, credentials);
+        
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        httpClientBuilder.setDefaultCredentialsProvider(provider);
+		CloseableHttpClient client = httpClientBuilder.build();
+		
+		
+		HttpGet request = new HttpGet(restUrl);
+       
+        HttpResponse response = client.execute(request);
+        String json = EntityUtils.toString(response.getEntity());
+        System.out.println(" json response: " + json);
+        ObjectMapper mapper = new ObjectMapper();
+
+        return mapper.readValue(json, Synthetic.class);
+	}
+	
+	
+}
+

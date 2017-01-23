@@ -1,0 +1,14 @@
+## Env
+SSH Host:   bi-hadoop-prod-4165.bi.services.us-south.bluemix.net   
+Hive URL: jdbc:hive2://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:10000/;ssl=true;   
+Web HDFS URL: https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:8443/gateway/default/webhdfs/v1/   
+
+Dashboard:  ambariUrl    
+* Entry point
+https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:9443/#/main/dashboard/metrics    
+* Directory
+https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:8443/gateway/default/hdfs/explorer.html#/user/michaelw   
+
+## SSH access
+$ ssh  michaelw@bi-hadoop-prod-4165.bi.services.us-south.bluemix.net
+Bluemix123456789
