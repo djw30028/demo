@@ -32,10 +32,14 @@ https://github.com/IBM-Bluemix/BigInsights-on-Apache-Hadoop/blob/master/examples
 
 
 
+---
+# Java Standalong Test:
+BigsightTest.java   
 
+*TODO: integrate web layer with hadoop service layer   
 
-
-===================
+---
+# CURL Test Cases:
 https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:8443/gateway/default
 
 curl -v -s -i -k -u michaelw:Bluemix123456789 -X GET 'https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:8443/gateway/default/webhdfs/v1/?op=LISTSTATUS'
