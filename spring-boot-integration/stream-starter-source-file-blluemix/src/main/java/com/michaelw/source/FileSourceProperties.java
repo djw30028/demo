@@ -15,8 +15,9 @@ public class FileSourceProperties {
     private static final String DEFAULT_DIR_XXX = System.getProperty("java.io.tmpdir") +
             File.separator + "dataflow" + File.separator + "input";
 
-    private static final String DEFAULT_DIR = "/usr/local/demo/input";
-
+    //private static final String DEFAULT_DIR = "/usr/local/demo/input";
+    private static final String DEFAULT_DIR = "/mnt/nfs/mydata";
+    
     /**
      * The directory to poll for new files.
      */

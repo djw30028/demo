@@ -1,6 +1,8 @@
 package com.michaelw.source;
 
 import com.michaelw.config.ApplicationConfiguration;
+import com.michaelw.integration.filter.LastModifiedFileFilter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.file.FileReadingMessageSource;
 import org.springframework.integration.file.filters.CompositeFileListFilter;
+import org.springframework.integration.file.filters.SimplePatternFileListFilter;
 import org.springframework.integration.file.transformer.FileToStringTransformer;
 
 import java.io.File;
@@ -62,7 +65,9 @@ public class FileSourceConfiguration {
     public MessageSource<File> fileReadingMessageSource() {
 
         CompositeFileListFilter<File> filters =new CompositeFileListFilter<>();
-
+        filters.addFilter(new SimplePatternFileListFilter("*.txt"));
+ 		filters.addFilter(new LastModifiedFileFilter());
+		
         FileReadingMessageSource source = new FileReadingMessageSource();
         source.setAutoCreateDirectory(true);
         logger.info(" -- Directory monitor: " + this.properties.getDirectory());
