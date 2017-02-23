@@ -6,7 +6,7 @@ Spring Integration File support
 
  ```
  mvn clean package
- java -jar target/file-read-directory-0.0.1-SNAPSHOT.jar
+ java -jar target/filemonitor.jar
 
  ```
 

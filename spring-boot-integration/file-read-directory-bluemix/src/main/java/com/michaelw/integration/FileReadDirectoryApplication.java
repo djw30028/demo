@@ -25,13 +25,12 @@ import java.nio.charset.Charset;
 @SpringBootApplication
 public class FileReadDirectoryApplication {
 
-	private static final String DIRECTORY = "/Users/michaelwang/project/integration";
-
+	//private static final String DIRECTORY = "/Users/michaelwang/project/integration";
+	private static final String DIRECTORY = "/mnt/nfs/mydata";
+	
     public static void main(String[] args) throws IOException, InterruptedException {
 		SpringApplication.run(FileReadDirectoryApplication.class, args);
 	}
-
-
 
 	@Bean
 	public IntegrationFlow processFileFlow() {

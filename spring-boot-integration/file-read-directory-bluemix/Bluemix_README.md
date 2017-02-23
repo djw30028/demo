@@ -18,6 +18,12 @@ $ docker push registry.ng.bluemix.net/myclearflowns/file-read-directory
 ## Step 6: 
 $ cf ic run --name file-read-directory  registry.ng.bluemix.net/myclearflowns/file-read-directory
 
+$ cf ic run --name file-read-directory --volume my_volume:/Users/michaelwang/project/integration  registry.ng.bluemix.net/myclearflowns/file-read-directory
+
+$ cf ic run --name file-read-directory --volume my_volume:/mnt/nfs registry.ng.bluemix.net/myclearflowns/file-read-directory
+
+Note: the volume should be the same as bluemix ftp volume
+
 ## Step 7:
 $ cf ic ps
 a59da88f-f8c registry.ng.bluemix.net/myclearflowns/file-read-directory:latest
@@ -36,7 +42,7 @@ root@instance-001ccfda:/michaelwang/project/integration
 ## Step 10:
 in local host:
 $ cd /Users/michaelwang/project/integration 
-$ cf ic cp file1.txt a59da88f-f8c:/Users/michaelwang/project/integration
+$ cf ic cp file1.txt a59da88f-f8c:/mnt/nfs/mydata
 
 ## Step 11:   
 Verify from log   

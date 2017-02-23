@@ -11,7 +11,7 @@ $ mvn clean package docker:build
 $ docker images
 
 ## Step 4: Start 
-$ cd /src/main/docker
+$ cd ../src/main/docker
 $ docker-compose up
 
 ## Step 5: access docker
@@ -22,8 +22,9 @@ $ docker exec -it <id> bash
 
 ## Step 6: test copy
 in local host:
-$ cd /Users/michaelwang/project/integration 
-$ docker cp file1.txt 77cd22433e44:/Users/michaelwang/project/integration
+$ cd to any directory having txt file
+
+$ docker cp file1.txt 276f72be776f:/mnt/nfs/mydata
 
 ## Step 7: verify
 $ docker logs <container-name>
@@ -75,7 +76,7 @@ $ docker cp file1.txt 2da56718d8d9:/Users/michaelwang/project/integration
 file1.txt received. Content: hi hello
 see you
 
-ftp localhost 21 is not working
+ 
 
 
 
