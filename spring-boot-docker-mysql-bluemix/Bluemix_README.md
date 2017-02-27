@@ -49,10 +49,10 @@ Login to bluemix.com and create new container and select myclearflows/mysql:last
  
 ## 4. test
 Bind IP: in bluemix console, bind public IP to spring-boot-docker-mysql
-http://169.46.19.62:8080/
+http://169.46.20.24:8080/
 
 get list stored by ftp
-http://169.46.19.62:8080/ingests
+http://169.46.20.24:8080/ingests
 
 #III Trouble shooting mysql container is not start
 4.1 $ cf ic ps -a
