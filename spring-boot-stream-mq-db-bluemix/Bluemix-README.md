@@ -69,14 +69,21 @@ $ cf ic images
 $ cf ic ps
    
 ## Run with ftp volume and link to rabbitmq and mysql
-$ cf ic run -p 8080:8080 --name spring-boot-stream-mq-db --volume my_volume:/mnt/nfs --link rabbitmq:rabbitmq --link mysql-blue:mysql -d registry.ng.bluemix.net/myclearflowns/spring-boot-stream-mq-db   
+$ cf ic run -p 8080:8080 --name spring-boot-stream-mq-db --volume my_volume:/mnt/nfs --link rabbitmq:rabbitmq --link mysql-blue:mysql -d registry.ng.bluemix.net/myclearflowns/spring-boot-stream-mq-db  
+
+ 
   * inspect container     
     $ cf ic inspect spring-boot-stream-mq-db   
-  * ftp file: find IP then ftp to that IP    
+      
+      
+  * ftp file: find IP then ftp to that IP  
     $ cf ic ip list   
-    $ ftp 169.46.22.118  --> michaelw/password   
-  * check logs   
-    $ cf ic logs spring-boot-stream-mq-db
+    $ ftp 169.46.22.118  --> michaelw/password      
+    put file through ftp
+    
+  * check logs
+    $ cf ic logs spring-boot-stream-mq-db   
+    
   * Login to mysql   
     $ cf ic exec -it mysql-blue /bin/bash
       :/# mysql -h localhost -u demo_user -p 
@@ -84,7 +91,17 @@ $ cf ic run -p 8080:8080 --name spring-boot-stream-mq-db --volume my_volume:/mnt
       mysql> show databases;
       mysql> use demo   
       mysql> show tables;  
-      mysql> select * from ingest_data;
+      mysql> select * from ingest_data;   
+    
+   * View the file content with mysql retrieval
+     $ cf ic ps   
+     - Start spring-boot-docker-mysql container if not start   
+     $ cf ic ip request    
+     $ cf ic ip bind <IP> <Contaier ID>   
+     http://169.46.20.24:8080/ingests
+     
+   * Check hadoop file system: username/password: michaelw/Bluemix123456789
+    https://bi-hadoop-prod-4017.bi.services.us-south.bluemix.net:8443/gateway/default/hdfs/explorer.html#/user/michaelw/clearflow
     
 ## Run with ftp volume and link to rabbitmq 
 $ cf ic run -p 8080:8080 --name spring-boot-stream-mq-db --volume my_volume:/mnt/nfs --link rabbitmq:rabbitmq -d registry.ng.bluemix.net/myclearflowns/spring-boot-stream-mq-db 
@@ -119,25 +136,15 @@ In local: cd /usr/local/demo/input where hello.txt is created
 $ cf ic cp hello.txt event-file-mq-bluemix:/mnt/nfs/mydata   
 $ cf ic cp good_morning.txt event-file-mq-bluemix:/mnt/nfs/mydata    
 
-$ cf ic logs event-file-mq-bluemix
-```
-?2017-01-18 21:18:07.991  INFO 1 --- [ask-scheduler-5] com.michaelw.source.FileHandler          :  -- FileHandler.process.Message hello.txt received. Content: hi three
-good morning
+# PART V: Integrated with spring-boot-docker-mysql   
+## Read from mysql database table: ingest_data   
+$ cd ../demo/spring-boot-docker-mysql-bluemix  
+$ mvn clean package docker:build   
+$ docker tag blue/spring-boot-docker-mysql registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql   
+$ docker push registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql 
+$ cf ic run --name blue-app-mysql --link mysql-blue:mysql -p 8080 -m 256 registry.ng.bluemix.net/myclearflowns/spring-boot-docker-mysql
 
-good work
+Bind with public IP
 
-{2017-01-18 21:18:07.993  INFO 1 --- [ask-scheduler-5] c.m.processor.ProcessorModuleDefinition  : transfer payload=hi three
-good morning
-
-good work
- after the transformer
-?2017-01-18 21:18:07.994  INFO 1 --- [ask-scheduler-5] com.michaelw.sink.SinkModuleDefinition   : Received: IngestData{value='hi three
-good morning
-
-good work
-```
-
-
-
-Well DONE
+http://169.46.20.24:8080/ingests
 

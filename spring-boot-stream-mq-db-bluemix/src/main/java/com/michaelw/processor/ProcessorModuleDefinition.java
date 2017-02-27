@@ -24,13 +24,13 @@ public class ProcessorModuleDefinition {
 
         String fileName = (String) inbound.getHeaders().get(HEADER_FILE_NAME);
         logger.info("transfer fileName=" + fileName);
-        ingestData.setFilePath(fileName);
+        ingestData.setFilePath(fileName.trim());
         
         String payload = inbound.getPayload().toString();
         payload = payload + " after the transformer";
 
-        logger.info("transfer payload=" + payload);
-        ingestData.setValue(payload);
+        logger.info("transfer payload=" + payload.trim());
+        ingestData.setValue(payload.trim());
 
         return ingestData;
     }
