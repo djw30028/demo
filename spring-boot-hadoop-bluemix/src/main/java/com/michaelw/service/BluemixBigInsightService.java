@@ -1,8 +1,10 @@
 package com.michaelw.service;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -12,6 +14,8 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -21,9 +25,7 @@ import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,8 +42,10 @@ public class BluemixBigInsightService {
 	private final static String X_Query_Key = "X-Query-Key";
 	private final static String Q_Query_Value = "OhiS1eSKDbsYlSfDS3X5AJKHGNv0PvWV";
 
-	private final static String HOST = "https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:8443";
-
+	private final static String HOST = "https://bi-hadoop-prod-4017.bi.services.us-south.bluemix.net:8443";
+	private final static String USER_NAME = "michaelw";
+	private final static String PASS_WORD = "Bluemix123456789";
+	
 	private CloseableHttpClient getAuthCloseableHttpClient() {
 		return getAuthCloseableHttpClient(false);
 	}
@@ -49,7 +53,7 @@ public class BluemixBigInsightService {
 	private CloseableHttpClient getAuthCloseableHttpClient(boolean disableRedirect) {
 		// 1. Set credentials
 		CredentialsProvider provider = new BasicCredentialsProvider();
-		Credentials credentials = new UsernamePasswordCredentials("michaelw", "Bluemix123456789");
+		Credentials credentials = new UsernamePasswordCredentials(USER_NAME, PASS_WORD);
 		provider.setCredentials(AuthScope.ANY, credentials);
 
 		// 2. Bind credentialsProvider to httpClient
@@ -97,7 +101,7 @@ public class BluemixBigInsightService {
 
 		// 1. Set credentials
 		CredentialsProvider provider = new BasicCredentialsProvider();
-		Credentials credentials = new UsernamePasswordCredentials("michaelw", "Bluemix123456789");
+		Credentials credentials = new UsernamePasswordCredentials(USER_NAME, PASS_WORD);
 		provider.setCredentials(AuthScope.ANY, credentials);
 
 		// 2. Bind credentialsProvider to httpClient
@@ -140,25 +144,55 @@ public class BluemixBigInsightService {
 		// https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:8443/gateway/default/hdfs/explorer.html#/user/michaelw
 	}
 
+	public int verifyFile(String fileName) throws Throwable {
+		//http://<HOST>:<PORT>/webhdfs/v1/<PATH>?op=GETFILESTATUS"
+		///user/michaelw/clearflow/hello.txt
+		String restUrl = "/gateway/default/webhdfs/v1/user/michaelw/clearflow/%s?op=GETFILESTATUS";
+		restUrl = HOST + String.format(restUrl, fileName);
+		System.out.println(" json restUrl: " + restUrl);
+		
+		CloseableHttpClient client = getAuthCloseableHttpClient();
+		HttpGet request = new HttpGet(restUrl);
+		HttpResponse response = client.execute(request);
+		System.out.println("status=" + response.getStatusLine().getStatusCode());
+		return response.getStatusLine().getStatusCode();
+	}
+	
+	public int deleteFile(String fileName) throws Throwable {
+		String restUrl = "/gateway/default/webhdfs/v1/user/michaelw/clearflow/%s?op=DELETE";
+		restUrl = HOST + String.format(restUrl, fileName);
+		System.out.println(" json restUrl: " + restUrl);
+		CloseableHttpClient client = getAuthCloseableHttpClient();
+		HttpDelete request = new HttpDelete(restUrl);
+		HttpResponse response = client.execute(request);
+		System.out.println("status=" + response.getStatusLine().getStatusCode());
+		return response.getStatusLine().getStatusCode();
+	}
 	/**
 	 * https://hadoop.apache.org/docs/r1.0.4/webhdfs.html#CREATE
 	 * @throws Throwable
 	 */
-	public void copyLocalFileToHadoop(String source) throws Throwable {
+	public void copyLocalFileToHadoop(String source, String fileName) throws Throwable {
+		 String path = source + "/" + fileName;
+		 String data = "";
+		 
 		//1. Input stream for the file in local file system to be written to HDFS
-        //InputStream in = new BufferedInputStream(new FileInputStream(source));
+        InputStream in = new BufferedInputStream(new FileInputStream(path));
+        data = IOUtils.toString(in);
         
-		String fileName = "testinput.txt";
-        
-        ClassPathResource cpr = new ClassPathResource("/"+fileName);
-        String data = "";
+        System.out.println(" data =" + data);
+		//String fileName = "testinput.txt";
+       /*
+        ClassPathResource cpr = new ClassPathResource(path);
+      
         try {
             byte[] bdata = FileCopyUtils.copyToByteArray(cpr.getInputStream());
             data = new String(bdata, StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
         }
-		String restUrl = "/gateway/default/webhdfs/v1/user/michaelw/clearflow/" + fileName + "?op=CREATE";
+        */
+        String restUrl = "/gateway/default/webhdfs/v1/user/michaelw/clearflow/" + fileName + "?op=CREATE";
 		restUrl = HOST + String.format(restUrl);
 		System.out.println(" json restUrl: " + restUrl);
 
@@ -168,7 +202,7 @@ public class BluemixBigInsightService {
 		HttpPut request = new HttpPut(restUrl);
 		HttpResponse response = client.execute(request);
 		
-		System.out.println("status=" + response.getStatusLine().getStatusCode());
+		System.out.println("status [307]=" + response.getStatusLine().getStatusCode());
 		final Header locationHeader = response.getFirstHeader("location");
 		final String location = locationHeader.getValue();
 		System.out.println(" localtion = " + location);
@@ -187,7 +221,7 @@ public class BluemixBigInsightService {
 		System.out.println("statusLoc [201]=" + responseLoc.getStatusLine().getStatusCode());
 		
 		//3. Well DONE -> check from console:
-		//https://bi-hadoop-prod-4165.bi.services.us-south.bluemix.net:8443/gateway/default/hdfs/explorer.html#/user/michaelw/clearflow
+		//https://bi-hadoop-prod-4017.bi.services.us-south.bluemix.net:8443/gateway/default/hdfs/explorer.html#/user/michaelw/clearflow
 		
 		
 	}

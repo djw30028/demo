@@ -14,12 +14,21 @@ public class BigsightTest {
 		//2. create new directory
 		//service.creatDirectory();
 		
-		//3. copy file
-		String localFile = "/Users/michaelwang/temp";
-		service.copyLocalFileToHadoop(localFile);
+		//3. get file
+		//https://bi-hadoop-prod-4017.bi.services.us-south.bluemix.net:8443/gateway/default/webhdfs/v1/user/michaelw/clearleap/hello.txt?op=GETFILESTATUS
+		int code = service.verifyFile("myhello.txt");
+		System.out.println(" code = " + code);
 		
+		//4. delete file
+		service.deleteFile("myhello.txt");
+		
+		//4. copy local file
+		String localFile = "/Users/michaelwang/temp";
+		String fileName = "myhello.txt";
+		service.copyLocalFileToHadoop(localFile, fileName);
 		
 	}
+	
 	public static void main(String[] args) {
 		try {
 			new BigsightTest().process();
